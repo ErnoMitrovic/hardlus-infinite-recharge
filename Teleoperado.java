@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="Teleoperado")
 
@@ -27,6 +28,8 @@ public class Teleoperado extends OpMode{
     @Override
     public void loop(){
         motor.setPower(gamepad1.left_stick_x);
+        int limit = Range.clip(motor.getCurrentPosition(),0,2450);
+        telemetry.addData("Clip output:", limit);
     }
     @Override
     public void start(){
