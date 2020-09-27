@@ -19,6 +19,10 @@ public class Teleoperado extends OpMode{
         downRight = hardwareMap.get(DcMotor.class, "abajo_derecho");
         upLeft = hardwareMap.get(DcMotor.class, "arriba_izquierdo");
         downLeft = hardwareMap.get(DcMotor.class, "abajo_izquierdo");
+        upLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        upRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        downLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        downRight.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     @Override
     public void init_loop(){
@@ -30,11 +34,26 @@ public class Teleoperado extends OpMode{
         drive = -gamepad1.left_stick_y;
         turn = gamepad1.left_stick_x;
         lateral = gamepad1.right_stick_x;
-        //Con el método clip solo se admiten los valores entre -1 y 1
         double upRightPower = Range.clip(drive - turn - lateral, -1, 1);
         double upLeftPower = Range.clip(drive + turn + lateral, -1, 1);
         double downRightPower = Range.clip(drive - turn + lateral, -1, 1);
         double downLeftPower = Range.clip(drive + turn - lateral, -1, 1);
+        upRight.setPower(upRightPower);
+        downRight.setPower(downRightPower);
+        upLeft.setPower(upLeftPower);
+        downLeft.setPower(downLeftPower);
+        if(gamepad1.left_bumper){
+            upRightPower *= 0.8;
+            upLeftPower *= 0.8;
+            downRightPower *= 0.8;
+            downLeftPower *= 0.8;
+        }
+        if(gamepad1.right_bumper){
+            upRightPower *= 0.6;
+            upLeftPower *= 0.6;
+            downRightPower *= 0.6;
+            downLeftPower *= 0.6;
+        }
     }
     @Override
     public void start(){
