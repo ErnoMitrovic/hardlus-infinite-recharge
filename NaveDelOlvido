@@ -1,0 +1,58 @@
+package org.firstinspires.ftc.teamcode.capacitaciones;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+
+@Disabled
+
+public class NaveDelOlvido {
+    public DcMotor upRight = null;
+    public DcMotor upLeft = null;
+    public DcMotor downRight = null;
+    public DcMotor downLeft = null;
+    
+    private Orientation angles;
+    private BNO055IMU imu;
+    private LinearOpMode programa;
+    public NaveDelOlvido (LinearOpMode programa){
+        this.programa = programa;
+    }
+    public void getHardware (HardwareMap hwMap){
+        upRight = hwMap.get(DcMotor.class, "frente_derecha");
+        upLeft = hwMap.get(DcMotor.class, "frente_izquierda");
+        downRight = hwMap.get(DcMotor.class, "atras_derecha");
+        downLeft = hwMap.get(DcMotor.class, "atras_izquierda");
+        imu = hwMap.get(BNO055IMU.class, "imu");
+        
+        upRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        downRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        upLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        downLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+    public double desviacion(){
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        programa.sleep(25);
+        return angles.firstAngle;
+    }
+    public void moverDistanciaRecta(double distancia, double velocidad){
+        final int conversion = (int) Math.round(distancia * 1631 / 10.61 / Math.PI);
+        double desiredPosition = desviacion();
+        upRight.setTargetPosition(conversion);
+        upLeft.setTargetPosition(conversion);
+        downRight.setTargetPosition(conversion);
+        downLeft.setTargetPosition(conversion);
+        upRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        upLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        downRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        downLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+}
