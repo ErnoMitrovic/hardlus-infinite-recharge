@@ -22,9 +22,16 @@ public class ServoCap extends OpMode{
         servoStandard.setPosition(0.8);
         telemetry.addData("Current position", servoStandard.getPosition());
         servoContinous.setPower(0.3);
-        /*Programar el modo click para los servos de rotación standard
+        /*Programar el modo clip para los servos de rotación standard
         * también llamados angulares
         */
+        boolean lastStatus = false;
+        if(gamepad1.a && lastStatus){
+            servoStandard.setPosition(0.8);
+            lastStatus = !lastStatus;
+        }else{
+            servoStandard.setPosition(0);
+            lastStatus = !lastStatus;
+        }
     }
-	// todo: write your code here
 }
