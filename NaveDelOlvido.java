@@ -48,6 +48,7 @@ public class NaveDelOlvido {
         downLeft.setPower(0);
         downRight.setPower(0);
     }
+    //Metodos para los autonomos
     //Medida de los encoders
     final int TICKS = 0;
     public void moverDistanciaRecta(double distancia, double velocidad){
@@ -85,6 +86,44 @@ public class NaveDelOlvido {
             downLeft.setPower(leftPower);
             upRight.setPower(rightPower);
             downRight.setPower(rightPower);
+        }
+        frenar();
+    }
+    public void moverDistanciaLateral(double distancia, double velocidad){
+        final int conversion = (int) Math.round(distancia * TICKS / 10.61 / Math.PI);
+        double desiredPosition = desviacion();
+        upRight.setTargetPosition(-conversion);
+        upLeft.setTargetPosition(conversion);
+        downRight.setTargetPosition(conversion);
+        downLeft.setTargetPosition(-conversion);
+        upRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        upLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        downRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        downLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while(programa.opModeIsActive() && downLeft.isBusy() && downRight.isBusy() && 
+        upLeft.isBusy() && upRight.isBusy()){
+            double desviacion = desviacion();
+            double error = (desiredPosition - desviacion) / desiredPosition;
+            final double PROPORCIONAL = 0.002;
+            double upPower = 0;
+            double downPower = 0;
+            if (distancia > 0){
+                upPower = velocidad;
+                downPower = velocidad;
+                upPower -= leftPower * error * PROPORCIONAL;
+                downPower += rightPower * error * PROPORCIONAL;
+            }
+            else if (distancia < 0){
+                velocidad *= -1;
+                upPower = velocidad;
+                downPower = velocidad;
+                upPower -= leftPower * error * PROPORCIONAL;
+                downPower += rightPower * error * PROPORCIONAL;
+            }
+            upLeft.setPower(upPower);
+            downLeft.setPower(downPower);
+            upRight.setPower(upPower);
+            downRight.setPower(downPower);
         }
         frenar();
     }
