@@ -12,7 +12,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @Disabled
-
+/**
+ * <h1>NaveDelOlvido</h1>
+ * Es la clase donde programamos la mayoría de los métodos para los autónomos, que
+ * tienden a estar programados en un LinearOpMode.
+ * @author Hardlus_15704
+ * @version 1.0
+ * @since 2020-10-04
+ */
 public class NaveDelOlvido {
     public DcMotor upRight = null;
     public DcMotor upLeft = null;
@@ -25,6 +32,10 @@ public class NaveDelOlvido {
     public NaveDelOlvido(LinearOpMode programa){
         this.programa = programa;
     }
+    /**
+     * Ayuda a incluir automaticamente los componentes del robot en el programa del autónomo.
+     * @param hwMap Permite agregar el HardwareMap
+    */
     public void getHardware (HardwareMap hwMap){
         upRight = hwMap.get(DcMotor.class, "frente_derecha");
         upLeft = hwMap.get(DcMotor.class, "frente_izquierda");
@@ -37,11 +48,18 @@ public class NaveDelOlvido {
         upLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         downLeft.setDirection(DcMotorSimple.Direction.REVERSE);
     }
+    /**
+     * Obtiene la desviación del giroscopio interno del IMU.
+     * @return regresa el primer valor del ángulo registrado.
+    */
     public double desviacion(){
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         programa.sleep(25);
         return angles.firstAngle;
     }
+    /**
+     * Regresa los motores al valor cero
+    */
     public void frenar(){
         upLeft.setPower(0);
         upRight.setPower(0);
@@ -51,6 +69,11 @@ public class NaveDelOlvido {
     //Metodos para los autonomos
     //Medida de los encoders
     final int TICKS = 0;
+    /**
+     * Mueve el robot una distancia recta hacia delante o atrás con la potencia especificada.
+     * @param distancia Es la distancia que se moverá hacia delante o atrás
+     * @param velocidad Es la potencia que se le asignará a los motores
+    */
     public void moverDistanciaRecta(double distancia, double velocidad){
         final int conversion = (int) Math.round(distancia * TICKS / 10.61 / Math.PI);
         double desiredPosition = desviacion();
