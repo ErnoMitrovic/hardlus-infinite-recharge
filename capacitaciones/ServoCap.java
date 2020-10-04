@@ -25,13 +25,21 @@ public class ServoCap extends OpMode{
         /*Programar el modo clip para los servos de rotación standard
         * también llamados angulares
         */
+        modoClick();
+    }
+    public void modoClick(){
         boolean lastStatus = false;
-        if(gamepad1.a && lastStatus){
+        if(gamepad1.a & !lastStatus){
             servoStandard.setPosition(0.8);
             lastStatus = !lastStatus;
-        }else{
+        }
+        else if (!gamepad1.a & lastStatus){
+            servoStandard.setPosition(0.8);
+        }
+        else if (gamepad1.a & lastStatus){
             servoStandard.setPosition(0);
             lastStatus = !lastStatus;
         }
+        else servoStandard.setPosition(0);
     }
 }
