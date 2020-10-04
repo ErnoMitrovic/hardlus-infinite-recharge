@@ -110,15 +110,15 @@ public class NaveDelOlvido {
             if (distancia > 0){
                 upPower = velocidad;
                 downPower = velocidad;
-                upPower -= leftPower * error * PROPORCIONAL;
-                downPower += rightPower * error * PROPORCIONAL;
+                upPower -= upPower * error * PROPORCIONAL;
+                downPower += downPower * error * PROPORCIONAL;
             }
             else if (distancia < 0){
                 velocidad *= -1;
                 upPower = velocidad;
                 downPower = velocidad;
-                upPower -= leftPower * error * PROPORCIONAL;
-                downPower += rightPower * error * PROPORCIONAL;
+                upPower -= upPower * error * PROPORCIONAL;
+                downPower += downPower * error * PROPORCIONAL;
             }
             upLeft.setPower(upPower);
             downLeft.setPower(downPower);
