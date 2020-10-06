@@ -9,20 +9,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 @TeleOp(name="Teleoperado")
 
 public class Teleoperado extends OpMode{
-    public DcMotor upRight;
-    public DcMotor upLeft;
-    public DcMotor downRight;
-    public DcMotor downLeft;
+    private NaveDelOlvido robot = new NaveDelOlvido();
     @Override
     public void init(){
-        upRight = hardwareMap.get(DcMotor.class, "arriba_derecho");
-        downRight = hardwareMap.get(DcMotor.class, "abajo_derecho");
-        upLeft = hardwareMap.get(DcMotor.class, "arriba_izquierdo");
-        downLeft = hardwareMap.get(DcMotor.class, "abajo_izquierdo");
-        upLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        upRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        downLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        downRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.getHardware(hardwareMap);
     }
     @Override
     public void init_loop(){
@@ -38,10 +28,6 @@ public class Teleoperado extends OpMode{
         double upLeftPower = Range.clip(drive + turn + lateral, -1, 1);
         double downRightPower = Range.clip(drive - turn + lateral, -1, 1);
         double downLeftPower = Range.clip(drive + turn - lateral, -1, 1);
-        upRight.setPower(upRightPower);
-        downRight.setPower(downRightPower);
-        upLeft.setPower(upLeftPower);
-        downLeft.setPower(downLeftPower);
         if(gamepad1.left_bumper){
             upRightPower *= 0.8;
             upLeftPower *= 0.8;
@@ -54,6 +40,16 @@ public class Teleoperado extends OpMode{
             downRightPower *= 0.6;
             downLeftPower *= 0.6;
         }
+        if(gamepad1.right_bumper && gamepad1.left_bumper){
+            upRightPower *= 0.45;
+            upLeftPower *= 0.45;
+            downRightPower *= 0.45;
+            downLeftPower *= 0.45;
+        }
+        robot.upRight.setPower(upRightPower);
+        robot.downRight.setPower(downRightPower);
+        robot.upLeft.setPower(upLeftPower);
+        robot.downLeft.setPower(downLeftPower);
     }
     @Override
     public void start(){
