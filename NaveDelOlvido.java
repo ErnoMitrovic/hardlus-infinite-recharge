@@ -29,8 +29,8 @@ public class NaveDelOlvido {
     private Orientation angles;
     private BNO055IMU imu;
     private LinearOpMode programa;
-    public NaveDelOlvido(LinearOpMode programa){
-        this.programa = programa;
+    public NaveDelOlvido(){
+        //Constructor del robot
     }
     /**
      * Ayuda a incluir automaticamente los componentes del robot en el programa del autónomo.
