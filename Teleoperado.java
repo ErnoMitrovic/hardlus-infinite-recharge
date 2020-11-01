@@ -28,23 +28,23 @@ public class Teleoperado extends OpMode{
         double upLeftPower = Range.clip(drive + turn + lateral, -1, 1);
         double downRightPower = Range.clip(drive - turn + lateral, -1, 1);
         double downLeftPower = Range.clip(drive + turn - lateral, -1, 1);
-        if(gamepad1.left_bumper){
-            upRightPower *= 0.8;
-            upLeftPower *= 0.8;
-            downRightPower *= 0.8;
-            downLeftPower *= 0.8;
-        }
-        if(gamepad1.right_bumper){
-            upRightPower *= 0.6;
-            upLeftPower *= 0.6;
-            downRightPower *= 0.6;
-            downLeftPower *= 0.6;
-        }
         if(gamepad1.right_bumper && gamepad1.left_bumper){
             upRightPower *= 0.45;
             upLeftPower *= 0.45;
             downRightPower *= 0.45;
             downLeftPower *= 0.45;
+        }
+        else if(gamepad1.left_bumper){
+            upRightPower *= 0.8;
+            upLeftPower *= 0.8;
+            downRightPower *= 0.8;
+            downLeftPower *= 0.8;
+        }
+        else if(gamepad1.right_bumper){
+            upRightPower *= 0.6;
+            upLeftPower *= 0.6;
+            downRightPower *= 0.6;
+            downLeftPower *= 0.6;
         }
         robot.upRight.setPower(upRightPower);
         robot.downRight.setPower(downRightPower);
