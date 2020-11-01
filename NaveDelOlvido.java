@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.capacitaciones;
+package org.firstinspires.ftc.teamcode.codigos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -25,6 +26,7 @@ public class NaveDelOlvido {
     public DcMotor downRight = null;
     public DcMotor downLeft = null;
     
+    private LinearOpMode programa;
     private Orientation angles;
     private BNO055IMU imu;
     public NaveDelOlvido(){
