@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.codigos;
+package org.firstinspires.ftc.teamcode.capacitaciones;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -70,13 +70,12 @@ public class NaveDelOlvido {
     //Medida de los encoders
     final int TICKS = 0;
     /**
-     * Mueve el robot una distancia recta hacia delante o atrás con la potencia especificada.
-     * @param distancia Es la distancia que se moverá hacia delante o atrás
-     * @param velocidad Es la potencia que se le asignará a los motores
+     * Valores por default de los autónomos
+     * @param distancia: la distancia que se moverá el robot
+     * @return conversion: La conversión utilizada para los motores del robot
     */
-    public void moverDistanciaRecta(double distancia, double velocidad){
+    private int valoresInicialesAutonomo(double distancia){
         final int conversion = (int) Math.round(distancia * TICKS / 10.61 / Math.PI);
-        double desiredPosition = desviacion();
         upRight.setTargetPosition(conversion);
         upLeft.setTargetPosition(conversion);
         downRight.setTargetPosition(conversion);
@@ -85,68 +84,64 @@ public class NaveDelOlvido {
         upLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         downRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         downLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        return conversion;
+    }
+    /**
+     * Corrección de trayectorias en el autonomo
+     * 
+    */
+    public void useImu(double desiredPosition, double velocidad, double distancia){
+        double desviacion = desviacion();
+        double error = (desiredPosition - desviacion) / desiredPosition;
+        final double PROPORCIONAL = 0.002;
+        double leftPower = 0;
+        double rightPower = 0;
+        if (distancia > 0){
+            leftPower = velocidad;
+            rightPower = velocidad;
+            leftPower -= leftPower * error * PROPORCIONAL;
+            rightPower += rightPower * error * PROPORCIONAL;
+        }
+        else if (distancia < 0){
+            velocidad *= -1;
+            leftPower = velocidad;
+            rightPower = velocidad;
+            leftPower -= leftPower * error * PROPORCIONAL;
+            rightPower += rightPower * error * PROPORCIONAL;
+        }
+        upLeft.setPower(leftPower);
+        downLeft.setPower(leftPower);
+        upRight.setPower(rightPower);
+        downRight.setPower(rightPower);
+    }
+    /**
+     * Mueve el robot una distancia recta hacia delante o atrás con la potencia especificada.
+     * @param distancia Es la distancia que se moverá hacia delante o atrás
+     * @param velocidad Es la potencia que se le asignará a los motores
+    */
+    public void moverDistanciaRecta(double distancia, double velocidad){
+        valoresInicialesAutonomo(distancia);
+        double desiredPosition = desviacion();
         while(programa.opModeIsActive() && downLeft.isBusy() && downRight.isBusy() && 
         upLeft.isBusy() && upRight.isBusy()){
-            double desviacion = desviacion();
-            double error = (desiredPosition - desviacion) / desiredPosition;
-            final double PROPORCIONAL = 0.002;
-            double leftPower = 0;
-            double rightPower = 0;
-            if (distancia > 0){
-                leftPower = velocidad;
-                rightPower = velocidad;
-                leftPower -= leftPower * error * PROPORCIONAL;
-                rightPower += rightPower * error * PROPORCIONAL;
-            }
-            else if (distancia < 0){
-                velocidad *= -1;
-                leftPower = velocidad;
-                rightPower = velocidad;
-                leftPower -= leftPower * error * PROPORCIONAL;
-                rightPower += rightPower * error * PROPORCIONAL;
-            }
-            upLeft.setPower(leftPower);
-            downLeft.setPower(leftPower);
-            upRight.setPower(rightPower);
-            downRight.setPower(rightPower);
+            useImu(desiredPosition, velocidad, distancia);
         }
         frenar();
     }
+    /**
+     * Metodo para mover lateralmente al robot mecano
+     * @param distancia: la distancia que se planea que se mueva el robot
+     * @param velocidad: la potencia que se le asignará a los motores
+    */
     public void moverDistanciaLateral(double distancia, double velocidad){
-        final int conversion = (int) Math.round(distancia * TICKS / 10.61 / Math.PI);
+        //UpRight y DownLeft van en dirección contraria
+        int conversion = valoresInicialesAutonomo(distancia);
         double desiredPosition = desviacion();
         upRight.setTargetPosition(-conversion);
-        upLeft.setTargetPosition(conversion);
-        downRight.setTargetPosition(conversion);
         downLeft.setTargetPosition(-conversion);
-        upRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        upLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        downRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        downLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         while(programa.opModeIsActive() && downLeft.isBusy() && downRight.isBusy() && 
         upLeft.isBusy() && upRight.isBusy()){
-            double desviacion = desviacion();
-            double error = (desiredPosition - desviacion) / desiredPosition;
-            final double PROPORCIONAL = 0.002;
-            double upPower = 0;
-            double downPower = 0;
-            if (distancia > 0){
-                upPower = velocidad;
-                downPower = velocidad;
-                upPower -= upPower * error * PROPORCIONAL;
-                downPower += downPower * error * PROPORCIONAL;
-            }
-            else if (distancia < 0){
-                velocidad *= -1;
-                upPower = velocidad;
-                downPower = velocidad;
-                upPower -= upPower * error * PROPORCIONAL;
-                downPower += downPower * error * PROPORCIONAL;
-            }
-            upLeft.setPower(upPower);
-            downLeft.setPower(downPower);
-            upRight.setPower(upPower);
-            downRight.setPower(downPower);
+            useImu(desiredPosition, velocidad, distancia);
         }
         frenar();
     }
