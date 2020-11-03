@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -25,21 +26,53 @@ public class ServoCap extends OpMode{
         /*Programar el modo clip para los servos de rotación standard
         * también llamados angulares
         */
-        modoClick();
+        modoClick(gamepad1.a);
     }
-    public void modoClick(){
-        boolean lastStatus = false;
-        if(gamepad1.a & !lastStatus){
-            servoStandard.setPosition(0.8);
-            lastStatus = !lastStatus;
+    public void modoClick(boolean press){
+        boolean currentState = false;
+        boolean prevState = false;
+        boolean max = false;
+        double position = 0;
+        if (press){
+            if(!prevState && !max){
+                position = 0.8;
+                max = true;
+            }
+            else if(!prevState && max){
+                position = 0;
+                max = true;
+            }
         }
-        else if (!gamepad1.a & lastStatus){
-            servoStandard.setPosition(0.8);
-        }
-        else if (gamepad1.a & lastStatus){
-            servoStandard.setPosition(0);
-            lastStatus = !lastStatus;
-        }
-        else servoStandard.setPosition(0);
+        else prevState = press;
+        servoStandard.setPosition(position);
+        telemetry.addData("Position servo: ", servoStandard.getPosition());
     }
+    //Debug en compilador:
+    /*
+    Scanner sc = new Scanner(System.in);
+        boolean currentState = false;
+        boolean press = input(sc);
+        boolean prevState = false;
+        boolean max = false;
+        int position = 0;
+        while (true){
+            if(press){
+                if(!prevState && !max){
+                    position = 8;
+                    max = true;
+                    prevState = true;
+                }else if (!prevState && max){
+                    position = 0;
+                    max = false;
+                    prevState = true;
+                } 
+            }else prevState = press;
+            System.out.println("Current position: " + position);
+            press = input(sc);
+        }
+    }
+    public static boolean input(Scanner sc){
+        return sc.next().toUpperCase().equals("P") ? true : false;
+    }
+    */
 }
