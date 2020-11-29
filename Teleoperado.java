@@ -20,7 +20,7 @@ public class Teleoperado extends OpMode{
     }
     @Override
     public void loop(){
-        double drive, turn, lateral;
+        double drive, turn, lateral, wobble;
         drive = -gamepad1.left_stick_y;
         turn = gamepad1.left_stick_x;
         lateral = gamepad1.right_stick_x;
@@ -46,6 +46,10 @@ public class Teleoperado extends OpMode{
             downRightPower *= 0.6;
             downLeftPower *= 0.6;
         }
+        wobblePower = Range.clip(-gamepad2.left_stick_y * 0.8, -0.8, 0.8);
+        
+        robot.wobble.setPower(wobblePower);
+        
         robot.upRight.setPower(upRightPower);
         robot.downRight.setPower(downRightPower);
         robot.upLeft.setPower(upLeftPower);
