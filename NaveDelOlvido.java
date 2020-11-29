@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.capacitaciones;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
@@ -26,6 +27,10 @@ public class NaveDelOlvido {
     public DcMotor downRight = null;
     public DcMotor downLeft = null;
     
+    //Motores y servos para el mecanismo de wobble
+    public DcMotor wobble = null;
+    public Servo garraWobble = null;
+    
     private LinearOpMode programa;
     private Orientation angles;
     private BNO055IMU imu;
@@ -42,6 +47,9 @@ public class NaveDelOlvido {
         downRight = hwMap.get(DcMotor.class, "atras_derecha");
         downLeft = hwMap.get(DcMotor.class, "atras_izquierda");
         imu = hwMap.get(BNO055IMU.class, "imu");
+        
+        wobble = hwMap.get(DcMotor.class, "wobble");
+        garraWobble = hwMap.get(Servo.class, "garraWobble");
         
         upRight.setDirection(DcMotorSimple.Direction.FORWARD);
         downRight.setDirection(DcMotorSimple.Direction.FORWARD);
