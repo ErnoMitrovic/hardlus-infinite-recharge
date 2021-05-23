@@ -77,13 +77,14 @@ public class NaveDelOlvido {
     //Metodos para los autonomos
     //Medida de los encoders
     final int TICKS = 0;
+    final double DIAM = 10.61;
     /**
      * Valores por default de los autónomos
      * @param distancia: la distancia que se moverá el robot
      * @return conversion: La conversión utilizada para los motores del robot
     */
     private int valoresInicialesAutonomo(double distancia){
-        final int conversion = (int) Math.round(distancia * TICKS / 10.61 / Math.PI);
+        final int conversion = (int) Math.round(distancia * TICKS / DIAM / Math.PI);
         upRight.setTargetPosition(conversion);
         upLeft.setTargetPosition(conversion);
         downRight.setTargetPosition(conversion);
